@@ -1,0 +1,428 @@
+/* Glassmorphism Header */
+.header-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  /* Match Auth/Dashboard Gradient */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+}
+
+.header-bar.dark {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.logo-section:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.logo-text {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: white;
+  letter-spacing: 0.5px;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Glassy Profile Badge similar to Dashboard */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: white;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 16px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s;
+}
+
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Theme Toggle similar to Dashboard */
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 36px;
+  height: 36px;
+  /* Slightly smaller than dashboard to fit header */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white !important;
+  /* Force white icon */
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.logout-btn {
+  display: none;
+  /* Hiding separate logout button as it's now in dropdown */
+}
+
+.map-title-section {
+  position: absolute;
+  top: 75px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
+  padding: 8px 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  z-index: 90;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.map-page-container.dark .map-title-section {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.map-page-container.dark .map-title-input {
+  color: #f1f5f9;
+}
+
+.map-page-container.dark .map-title-input:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Logo and user text are handled generally by .logo-text and .user-info now being white/glassy by default */
+.map-page-container.dark .logo-section:hover {
+  background: rgba(255, 255, 255, 0.2);
+  /* Keep consistent with light mode glassy hover */
+}
+
+.map-title-input {
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #334155;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-align: center;
+  width: 200px;
+  transition: all 0.2s;
+}
+
+.map-title-input:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.map-title-input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  width: 300px;
+}
+
+.save-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.save-btn:hover {
+  background: #5a67d8;
+}
+
+/* Share Button */
+.share-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.share-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Reusing Modal Overlay from Dashboard if imported, but redefining for safety/isolation in this page context */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content.share-modal {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+  transform: scale(0.95);
+  animation: scaleIn 0.2s forwards;
+  text-align: left;
+}
+
+.share-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.share-modal h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1e293b;
+}
+
+.share-modal p {
+  color: #64748b;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #64748b;
+}
+
+.share-field {
+  margin-bottom: 15px;
+}
+
+.share-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #334155;
+  background: #f8fafc;
+}
+
+.input-group button {
+  padding: 0 15px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.input-group button:hover {
+  background: #2563eb;
+}
+
+.copy-success {
+  margin-top: 10px;
+  padding: 8px;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Dark Mode Share Modal */
+.map-page-container.dark .modal-content.share-modal {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.map-page-container.dark .share-modal h3 {
+  color: #f3f4f6;
+}
+
+.map-page-container.dark .share-modal p {
+  color: #94a3b8;
+}
+
+.map-page-container.dark .share-field label {
+  color: #cbd5e1;
+}
+
+/* Collaborators Sidebar (Left Panel in MapPage) */
+.collaborators-sidebar {
+  position: absolute;
+  top: 130px;
+  /* Moved down to avoid overlap with Title Input */
+  left: 20px;
+  width: 240px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
+.map-page-container.dark .collaborators-sidebar {
+  background: rgba(30, 41, 59, 0.8);
+  color: #f3f4f6;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.collaborators-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.map-page-container.dark .collaborators-header {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.collaborator-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.collaborator-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.collaborator-info {
+  flex: 1;
+}
+
+.collaborator-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.collaborator-status {
+  font-size: 0.8rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.map-page-container.dark .collaborator-status {
+  color: #94a3b8;
+}
+
+.online-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+}
