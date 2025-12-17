@@ -32,8 +32,11 @@ router.post('/register', async (req, res) => {
         res.status(201).json({ message: 'User created successfully' });
 
     } catch (error) {
-        console.error('Registration Error:', error.message);
-        res.status(500).json({ error: error.message });
+        console.error('Registration Error:', error); // Log full error object
+        if (error.code === 11000) {
+            return res.status(400).json({ error: 'Username or Email already exists.' });
+        }
+        res.status(500).json({ error: 'Internal Server Error: ' + error.message });
     }
 });
 
