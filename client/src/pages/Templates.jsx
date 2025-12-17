@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaSignOutAlt, FaMoon, FaSun, FaSearch, FaMap } from 'react-icons/fa';
-import axios from 'axios';
+import api from '../api';
 import './Templates.css';
 
 // Template Data Definitions
@@ -96,7 +96,7 @@ const Templates = () => {
 
         setLoading(true);
         try {
-            const res = await axios.post('/api/maps', {
+            const res = await api.post('/api/maps', {
                 title: template.title,
                 nodes: template.nodes,
                 edges: template.edges

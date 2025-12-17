@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Auth.css';
 
@@ -24,7 +24,7 @@ const Register = () => {
         }
 
         try {
-            await axios.post('/api/auth/register', { username, email, password });
+            await api.post('/api/auth/register', { username, email, password });
             navigate('/login');
         } catch (err) {
             console.error(err);

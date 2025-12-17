@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { FaUserCircle, FaSignOutAlt, FaMapMarkedAlt, FaMoon, FaSun, FaShareAlt, FaCopy, FaTimes } from 'react-icons/fa';
 import Canvas from '../components/MindMap/Canvas';
 import './MapPage.css';
@@ -39,7 +39,7 @@ const MapPage = () => {
         if (!inviteEmail) return;
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post(`/api/maps/${mapId}/invite`, { email: inviteEmail }, {
+            const res = await api.post(`/api/maps/${mapId}/invite`, { email: inviteEmail }, {
                 headers: { 'Authorization': token }
             });
             setInviteStatus({ type: 'success', message: `Invited ${res.data.user.username}!` });
@@ -68,7 +68,7 @@ const MapPage = () => {
 
         const fetchMapMetadata = async () => {
             try {
-                const res = await axios.get(`/api/maps/${mapId}`, {
+                const res = await api.get(`/api/maps/${mapId}`, {
                     headers: { 'Authorization': token }
                 });
                 setTitle(res.data.title);
@@ -258,7 +258,7 @@ const MapPage = () => {
                 <button className="save-btn" onClick={async () => {
                     try {
                         const token = localStorage.getItem('token');
-                        await axios.put(`/api/maps/${mapId}`, {
+                        await api.put(`/api/maps/${mapId}`, {
                             title,
                             nodes,
                             edges

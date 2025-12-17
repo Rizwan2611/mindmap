@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { FaPlus, FaMap, FaUserCircle, FaSignOutAlt, FaSearch, FaMoon, FaSun, FaEllipsisV, FaEdit, FaTrash, FaFilePdf, FaCheck, FaTimes } from 'react-icons/fa';
 import './Dashboard.css';
 
@@ -221,7 +221,7 @@ const Dashboard = () => {
         if (!mapToDelete) return;
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`/api/maps/${mapToDelete}`, {
+            await api.delete(`/api/maps/${mapToDelete}`, {
                 headers: { 'Authorization': token }
             });
             setMaps(maps.filter(m => m._id !== mapToDelete));
@@ -255,7 +255,7 @@ const Dashboard = () => {
             return;
         }
         try {
-            const res = await axios.get('/api/maps', {
+            const res = await api.get('/api/maps', {
                 headers: { 'Authorization': token }
             });
             setMaps(res.data);
@@ -275,7 +275,7 @@ const Dashboard = () => {
         const token = localStorage.getItem('token');
         setLoading(true);
         try {
-            const res = await axios.post('/api/maps', { title: 'New Mind Map' }, {
+            const res = await api.post('/api/maps', { title: 'New Mind Map' }, {
                 headers: { 'Authorization': token }
             });
             navigate(`/map/${res.data._id}`);
@@ -310,7 +310,7 @@ const Dashboard = () => {
         e.stopPropagation();
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`/api/maps/${mapId}`,
+            await api.put(`/api/maps/${mapId}`,
                 { title: newMapTitle },
                 { headers: { 'Authorization': token } }
             );
