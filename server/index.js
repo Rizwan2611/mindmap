@@ -1,5 +1,6 @@
 const express = require('express');
 const http = require('http');
+const path = require('path');
 const { Server } = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -26,7 +27,7 @@ app.use('/api/maps', mapRoutes);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", process.env.CLIENT_URL || "*"], // Allow local and production
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"]
   }
 });
@@ -41,20 +42,17 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mindlink'
 const socketController = require('./controllers/socketController');
 socketController(io);
 
-const path = require('path');
-const PORT = process.env.PORT || 5001;
-
-// Serve static assets in production
+// Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
+  // Set static folder
   app.use(express.static(path.join(__dirname, '../client/dist')));
 
   app.get('*', (req, res) => {
-    if (!req.url.startsWith('/api')) {
-      res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
-    }
+    res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
   });
 }
 
+const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

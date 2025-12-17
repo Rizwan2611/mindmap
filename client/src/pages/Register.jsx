@@ -24,7 +24,7 @@ const Register = () => {
         }
 
         try {
-            await axios.post('http://localhost:5001/api/auth/register', { username, email, password });
+            await axios.post('/api/auth/register', { username, email, password });
             navigate('/login');
         } catch (err) {
             console.error(err);

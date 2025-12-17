@@ -96,7 +96,7 @@ const Templates = () => {
 
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:5001/api/maps', {
+            const res = await axios.post('/api/maps', {
                 title: template.title,
                 nodes: template.nodes,
                 edges: template.edges
