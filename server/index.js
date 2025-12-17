@@ -57,7 +57,26 @@ const connectDB = async () => {
   }
 };
 
-// ... socket and routes setup remains above ...
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected! Attempting to reconnect...');
+});
 
-// Call the connection function to start the app
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
+
+const socketController = require('./controllers/socketController');
+socketController(io);
+
+// Serve static assets if in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  // Fallback to index.html for SPA
+  app.get(new RegExp('^.*$'), (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
+  });
+}
+
 connectDB();
