@@ -6,13 +6,16 @@
         "client",
         "server"
     ],
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "scripts": {
         "start": "node server/index.js",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "server": "cd server && npm run dev",
         "client": "cd client && npm run dev",
         "install:all": "npm install && cd client && npm install && cd ../server && npm install",
-        "build": "npm install && npm install --include=dev --prefix client && npm run build --prefix client && npm install --prefix server"
+        "build": "npm install && npm install --production=false --prefix client && npm run build --prefix client && npm install --prefix server"
     },
     "devDependencies": {
         "concurrently": "^8.2.0"
