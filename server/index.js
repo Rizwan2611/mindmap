@@ -34,13 +34,32 @@ const io = new Server(server, {
 
 // MongoDB Connection
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mindlink';
-console.log('Attempting to connect to MongoDB at:', MONGO_URI.replace(/:([^:@]{1,})@/, ':****@')); // Log masked URI
+console.log('Attempting to connect to MongoDB at:', MONGO_URI.replace(/:([^:@]{1,})@/, ':****@')); // MongoDB Connection Strategy
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mindlink', {
+      serverSelectionTimeoutMS: 30000, // Increase timeout to 30s
+      socketTimeoutMS: 45000,
+    });
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (err) {
+    console.error(`Error: ${err.message}`);
+    if (err.message.includes('Authentication failed')) {
+      console.error('CRITICAL ERROR: Invalid username or password in MONGODB_URI. Please verify your Render Environment Variables.');
+    }
+    // Do not exit process, let Render restart if needed, but logging is key
+  }
+};
 
-mongoose.connect(MONGO_URI, {
-  serverSelectionTimeoutMS: 5000,
-})
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+connectDB();
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected! Attempting to reconnect...');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
 
 const socketController = require('./controllers/socketController');
 socketController(io);
