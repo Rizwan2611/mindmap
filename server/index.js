@@ -43,40 +43,21 @@ const connectDB = async () => {
       family: 4, // Force IPv4
     });
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+
+    const PORT = process.env.PORT || 5001;
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
   } catch (err) {
     console.error(`Error: ${err.message}`);
     if (err.message.includes('Authentication failed')) {
       console.error('CRITICAL ERROR: Invalid username or password in MONGODB_URI. Please verify your Render Environment Variables.');
     }
-    // Do not exit process, let Render restart if needed, but logging is key
+    process.exit(1); // Exit process with failure to trigger restart
   }
 };
 
+// ... socket and routes setup remains above ...
+
+// Call the connection function to start the app
 connectDB();
-
-mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected! Attempting to reconnect...');
-});
-
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err);
-});
-
-const socketController = require('./controllers/socketController');
-socketController(io);
-
-// Serve static assets if in production
-if (process.env.NODE_ENV === 'production') {
-  // Set static folder
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-
-  // Fallback to index.html for SPA - RegExp used to avoid Express 5 path parsing errors
-  app.get(new RegExp('^.*$'), (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
-  });
-}
-
-const PORT = process.env.PORT || 5001;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
