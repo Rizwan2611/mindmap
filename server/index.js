@@ -33,8 +33,11 @@ const io = new Server(server, {
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mindlink', {
-  serverSelectionTimeoutMS: 5000
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mindlink';
+console.log('Attempting to connect to MongoDB at:', MONGO_URI.replace(/:([^:@]{1,})@/, ':****@')); // Log masked URI
+
+mongoose.connect(MONGO_URI, {
+  serverSelectionTimeoutMS: 5000,
 })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
