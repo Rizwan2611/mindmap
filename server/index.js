@@ -38,8 +38,9 @@ console.log('Attempting to connect to MongoDB at:', MONGO_URI.replace(/:([^:@]{1
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mindlink', {
-      serverSelectionTimeoutMS: 30000, // Increase timeout to 30s
+      serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
+      family: 4, // Force IPv4
     });
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {
