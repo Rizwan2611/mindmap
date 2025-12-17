@@ -50,8 +50,8 @@ if (process.env.NODE_ENV === 'production') {
   // Set static folder
   app.use(express.static(path.join(__dirname, '../client/dist')));
 
-  // Fallback to index.html for SPA
-  app.get('*', (req, res) => {
+  // Fallback to index.html for SPA - RegExp used to avoid Express 5 path parsing errors
+  app.get(new RegExp('^.*$'), (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
   });
 }
