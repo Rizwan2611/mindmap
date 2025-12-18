@@ -81,7 +81,7 @@ router.post('/:id/invite', verifyToken, async (req, res) => {
 
         const userToInvite = await User.findOne({ email: email.toLowerCase().trim() });
         if (!userToInvite) {
-            return res.status(404).json({ error: 'User not found with that email.' });
+            return res.status(404).json({ error: 'User not found. They must be registered on MindLink to be invited.' });
         }
 
         if (map.collaborators.includes(userToInvite._id)) {

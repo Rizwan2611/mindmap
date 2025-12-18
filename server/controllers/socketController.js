@@ -1,23 +1,48 @@
 const Map = require('../models/Map');
 
+// Track users per map: { mapId: [{ id: socketId, username: string, color: string }] }
+const mapUsers = {};
+
+const getMapUsers = (mapId) => {
+    return mapUsers[mapId] || [];
+};
+
 module.exports = (io) => {
     io.on('connection', (socket) => {
         console.log('User connected:', socket.id);
 
-        socket.on('join-map', async (mapId) => {
+        socket.on('join-map', async (data) => {
+            // Handle both legacy (string) and new (object) payloads
+            const mapId = typeof data === 'string' ? data : data.mapId;
+            const username = typeof data === 'object' && data.username ? data.username : 'Guest';
+
             socket.join(mapId);
-            console.log(`User ${socket.id} joined map ${mapId}`);
+
+            // Store data on socket for disconnect handling
+            socket.data.mapId = mapId;
+            socket.data.username = username;
+
+            console.log(`User ${username} (${socket.id}) joined map ${mapId}`);
+
+            // Add user to active list
+            if (!mapUsers[mapId]) {
+                mapUsers[mapId] = [];
+            }
+            // Avoid duplicates check (though socket id is unique)
+            if (!mapUsers[mapId].find(u => u.id === socket.id)) {
+                mapUsers[mapId].push({
+                    id: socket.id,
+                    username: username,
+                    color: '#' + Math.floor(Math.random() * 16777215).toString(16) // Assign random color
+                });
+            }
+
+            // Broadcast active users to everyone in the room (including sender)
+            io.to(mapId).emit('room-users', mapUsers[mapId]);
+
             // Send initial map data
             try {
                 let map = await Map.findById(mapId);
-                if (!map) {
-                    // Create default map if not exists (for prototype simplicity)
-                    if (mapId === 'default-map') {
-                        map = new Map({ _id: 'default-map', title: 'My Mind Map', nodes: [], edges: [] }); // _id likely needs to be ObjectId or we handle string
-                        // Mongoose _id is ObjectId by default. 'default-map' is not valid ObjectId.
-                        // We'll search by a custom id or just create one if not found.
-                    }
-                }
                 if (map) {
                     socket.emit('init-map', map);
                 }
@@ -32,7 +57,7 @@ module.exports = (io) => {
 
             // Persist to DB
             try {
-                const map = await Map.findById(mapId); // Assuming mapId is valid ObjectId now
+                const map = await Map.findById(mapId);
                 if (!map) return;
 
                 switch (operation.type) {
@@ -66,6 +91,13 @@ module.exports = (io) => {
                         map.nodes = map.nodes.filter(n => n.id !== operation.payload.id);
                         map.edges = map.edges.filter(e => e.source !== operation.payload.id && e.target !== operation.payload.id);
                         break;
+                    case 'EDGE_DELETE':
+                        map.edges = map.edges.filter(e => e.id !== operation.payload.id);
+                        break;
+                    case 'EDGE_UPDATE':
+                        const edgeIndex = map.edges.findIndex(e => e.id === operation.payload.id);
+                        if (edgeIndex !== -1) map.edges[edgeIndex] = operation.payload;
+                        break;
                 }
                 await map.save();
             } catch (err) {
@@ -79,6 +111,18 @@ module.exports = (io) => {
 
         socket.on('disconnect', () => {
             console.log('User disconnected:', socket.id);
+            const { mapId } = socket.data;
+            if (mapId && mapUsers[mapId]) {
+                // Remove user from list
+                mapUsers[mapId] = mapUsers[mapId].filter(u => u.id !== socket.id);
+                // Emit new list
+                io.to(mapId).emit('room-users', mapUsers[mapId]);
+
+                // Cleanup if empty
+                if (mapUsers[mapId].length === 0) {
+                    delete mapUsers[mapId];
+                }
+            }
         });
     });
 };

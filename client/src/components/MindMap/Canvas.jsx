@@ -53,7 +53,10 @@ const Canvas = ({ mapId, darkMode, nodes, setNodes, edges, setEdges }) => {
 
         socket.auth = { token: localStorage.getItem('token') };
         socket.connect();
-        socket.emit('join-map', mapId);
+        socket.emit('join-map', {
+            mapId,
+            username: localStorage.getItem('username') || 'Guest'
+        });
 
         socket.on('init-map', (mapData) => {
             setNodes(mapData.nodes || []);
