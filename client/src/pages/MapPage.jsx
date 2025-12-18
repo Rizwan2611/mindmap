@@ -150,6 +150,22 @@ const MapPage = () => {
 
                 <div className="user-section">
                     <div style={{
+                        marginRight: '15px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        fontSize: '0.85rem',
+                        color: '#64748b',
+                        fontWeight: '500',
+                        backgroundColor: darkMode ? '#374151' : '#f1f5f9',
+                        padding: '6px 12px',
+                        borderRadius: '20px'
+                    }} title="Active Collaborators">
+                        <FaUserCircle />
+                        <span>{activeUsers.length} Active</span>
+                    </div>
+
+                    <div style={{
                         marginRight: '20px',
                         display: 'flex',
                         alignItems: 'center',
