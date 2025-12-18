@@ -97,14 +97,24 @@ const MapPage = () => {
         if (mapId) fetchMapMetadata();
     }, [navigate, mapId]);
 
-    // Socket listener for active users
+    // Connection State
+    const [isConnected, setIsConnected] = useState(socket.connected);
+
+    // Socket listener for active users & connection status
     useEffect(() => {
         if (socket) {
+            const onConnect = () => setIsConnected(true);
+            const onDisconnect = () => setIsConnected(false);
+
+            socket.on('connect', onConnect);
+            socket.on('disconnect', onDisconnect);
             socket.on('room-users', (users) => {
                 setActiveUsers(users);
             });
 
             return () => {
+                socket.off('connect', onConnect);
+                socket.off('disconnect', onDisconnect);
                 socket.off('room-users');
             };
         }
@@ -139,6 +149,24 @@ const MapPage = () => {
                 </div>
 
                 <div className="user-section">
+                    <div style={{
+                        marginRight: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        fontSize: '0.8rem',
+                        color: isConnected ? '#10b981' : '#ef4444',
+                        fontWeight: '500'
+                    }}>
+                        <div style={{
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            backgroundColor: isConnected ? '#10b981' : '#ef4444',
+                            boxShadow: isConnected ? '0 0 5px #10b981' : 'none'
+                        }}></div>
+                        {isConnected ? 'Connected' : 'Disconnected'}
+                    </div>
                     <button className="share-btn" onClick={handleShare} title="Invite Collaborators">
                         <FaShareAlt /> Share
                     </button>

@@ -106,7 +106,9 @@ module.exports = (io) => {
         });
 
         socket.on('cursor', ({ mapId, x, y, username }) => {
-            socket.to(mapId).emit('cursor', { id: socket.id, x, y, username });
+            const user = mapUsers[mapId]?.find(u => u.id === socket.id);
+            const color = user ? user.color : '#ff5722';
+            socket.to(mapId).emit('cursor', { id: socket.id, x, y, username, color });
         });
 
         socket.on('disconnect', () => {

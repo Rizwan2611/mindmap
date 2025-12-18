@@ -453,7 +453,7 @@ const Canvas = ({ mapId, darkMode, nodes, setNodes, edges, setEdges }) => {
                         />
                     ))}
                     {Object.values(cursors).map(cursor => (
-                        <Cursor key={cursor.id} x={cursor.x} y={cursor.y} username={cursor.username} />
+                        <Cursor key={cursor.id} x={cursor.x} y={cursor.y} username={cursor.username} color={cursor.color} />
                     ))}
                 </div>
 
