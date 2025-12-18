@@ -57,9 +57,16 @@ router.get('/:id', verifyToken, async (req, res) => {
         if (!map) return res.status(404).json({ error: 'Map not found' });
 
         // Access Control
+        // Access Control (Relaxed for easier collaboration - Link Sharing Mode)
+        // If you want strict private maps, uncomment the lines below:
+        /*
         if (map.owner.toString() !== req.userId && !map.collaborators.includes(req.userId)) {
             return res.status(403).json({ error: 'Access denied. You are not a collaborator on this map.' });
         }
+        */
+
+        // Auto-add visitor as collaborator so they show up in dashboards? 
+        // For now, just allow access.
 
         res.json(map);
     } catch (error) {
